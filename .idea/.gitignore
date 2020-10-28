@@ -1,0 +1,11 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Datasource local storage ignored files
+/../../../../../../../:\Users\anton\IdeaProjects\JavaCrocHomeworks\JavaCrocFilesAndExceptionsHometask3\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+
+#created items
+/src/main/resources/*
