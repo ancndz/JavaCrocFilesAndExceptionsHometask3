@@ -8,4 +8,4 @@
 /httpRequests/
 
 #created items
-/src/main/resources/
+/src/main/resources/temp/*.*
