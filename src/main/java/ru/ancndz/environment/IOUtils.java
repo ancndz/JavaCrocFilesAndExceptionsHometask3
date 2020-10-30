@@ -5,7 +5,6 @@ import ru.ancndz.objects.Recordable;
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 public class IOUtils<T extends Recordable> {
 
@@ -26,7 +25,7 @@ public class IOUtils<T extends Recordable> {
         }
     }
 
-    public void saveAll(Set<T> itemList) {
+    public void saveAll(List<T> itemList) {
         for (T item: itemList) {
             save(item);
         }
@@ -71,8 +70,8 @@ public class IOUtils<T extends Recordable> {
         return deleteItemByNameAndCode(item.getName(), item.getCode());
     }
 
-    @SuppressWarnings("unchecked")
-    public T loadLast(String dirName) {
+
+    public Recordable loadLast(String dirName) {
         String[] filesNameList = getFilesNameList(pathToFiles + dirName);
         long lastCode = 0;
 
@@ -90,11 +89,12 @@ public class IOUtils<T extends Recordable> {
         }
 
         try {
-            FileInputStream fileInputStream = new FileInputStream(dirName + "/" + lastCode);
+            FileInputStream fileInputStream = new FileInputStream(pathToFiles + dirName + "/" + lastCode);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            Recordable item = (Recordable) objectInputStream.readObject();
             fileInputStream.close();
             objectInputStream.close();
-            return (T) objectInputStream.readObject();
+            return item;
         } catch (IOException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
@@ -103,13 +103,12 @@ public class IOUtils<T extends Recordable> {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
-    public List<T> loadAll(String dirName) {
+    public List<T> loadAllByName(String dirName) {
         String[] filesNameList = getFilesNameList(pathToFiles + dirName);
         List<T> filesList = new LinkedList<>();
         try {
             for (String file: filesNameList) {
-                FileInputStream fileInputStream = new FileInputStream(dirName + "/" + file);
+                FileInputStream fileInputStream = new FileInputStream(pathToFiles + dirName + "/" + file);
                 ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
                 filesList.add((T) objectInputStream.readObject());
                 fileInputStream.close();
@@ -119,6 +118,17 @@ public class IOUtils<T extends Recordable> {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
+        return filesList;
+    }
+
+    public List<T> loadAll() {
+        String[] filesNameList = getFilesNameList(pathToFiles);
+        List<T> filesList = new LinkedList<>();
+
+        for (String file: filesNameList) {
+            filesList.addAll(loadAllByName(file));
+        }
+
         return filesList;
     }
 

@@ -3,19 +3,19 @@ package ru.ancndz.objects;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TaskSet {
-    private final Set<Task> taskSet;
+public class TaskList {
+    private final List<Task> taskList;
 
-    public TaskSet(Set<Task> taskList) {
-        this.taskSet = taskList;
+    public TaskList(List<Task> taskList) {
+        this.taskList = taskList;
     }
 
     public void add(Task task) {
-        this.taskSet.add(task);
+        this.taskList.add(task);
     }
 
-    public void addAll(Set<Task> taskSet) {
-        this.taskSet.addAll(taskSet);
+    public void addAll(List<Task> taskList) {
+        this.taskList.addAll(taskList);
     }
 
     public Task findLastByName(String name) {
@@ -24,20 +24,20 @@ public class TaskSet {
     }
 
     public boolean deleteByNameAndCode(String name, long code) {
-        return taskSet.removeAll(findByNameAndCode(name, code));
+        return taskList.removeAll(findByNameAndCode(name, code));
     }
 
     public List<Task> findAllByName(String name) {
-        return taskSet.stream().filter(task -> task.getName().equals(name)).collect(Collectors.toList());
+        return taskList.stream().filter(task -> task.getName().equals(name)).collect(Collectors.toList());
     }
 
     public List<Task> findByNameAndCode(String name, long code) {
-        return taskSet.stream().filter(task -> task.getName().equals(name) && task.getCode() == code).collect(Collectors.toList());
+        return taskList.stream().filter(task -> task.getName().equals(name) && task.getCode() == code).collect(Collectors.toList());
     }
 
     public List<Task> getAllLastTasks() {
         Set<String> allNames = new HashSet<>();
-        taskSet.forEach(task -> allNames.add(task.getName()));
+        taskList.forEach(task -> allNames.add(task.getName()));
         List<Task> allLasts = new LinkedList<>();
         for (String name: allNames) {
             allLasts.add(findLastByName(name));
@@ -46,14 +46,14 @@ public class TaskSet {
     }
 
     public boolean delete(Task task) {
-        return this.taskSet.remove(task);
+        return this.taskList.remove(task);
     }
 
     public boolean deleteByName(String name) {
-        return taskSet.removeAll(findAllByName(name));
+        return taskList.removeAll(findAllByName(name));
     }
 
-    public Set<Task> getTaskSet() {
-        return taskSet;
+    public List<Task> getTaskList() {
+        return taskList;
     }
 }

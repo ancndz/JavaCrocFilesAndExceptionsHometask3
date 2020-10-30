@@ -1,20 +1,22 @@
 package ru.ancndz.environment;
 
+import ru.ancndz.objects.Recordable;
 import ru.ancndz.objects.Task;
-import ru.ancndz.objects.TaskSet;
+import ru.ancndz.objects.TaskList;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
 
     Scanner scanner;
-    TaskSet taskSet;
+    TaskList taskList;
     IOUtils<Task> taskIOUtils;
 
-    public Menu(TaskSet taskSet, Scanner scanner, IOUtils<Task> taskIOUtils) {
-        this.taskSet = taskSet;
+    public Menu(Scanner scanner, IOUtils<Task> taskIOUtils) {
         this.scanner = scanner;
         this.taskIOUtils = taskIOUtils;
+        this.taskList = new TaskList(taskIOUtils.loadAll());
     }
 
     public void mainMenu() {
@@ -22,7 +24,7 @@ public class Menu {
                 "LOADING...\n"+
                 "MAIN MENU\n"+
                 "CHOOSE OPTION:\n"+
-                "1 - GET ALL TASKS\n"+
+                "1 - LOAD ALL TASKS\n"+
                 "2 - GET TASK INFO\n"+
                 "3 - UPDATE TASK STATUS\n"+
                 "4 - UPDATE TASK EXECUTOR\n"+
@@ -58,11 +60,13 @@ public class Menu {
 
     public void getAllTask() {
         String temp = scanner.nextLine();
-        StringBuilder allTasks = new StringBuilder("All tasks:\n");
-        for (Task eachTask: taskSet.getAllLastTasks()) {
-            allTasks.append(eachTask.toString());
+        StringBuilder allTasksInfo = new StringBuilder("All tasks:\n");
+        List<Task> allTasksList = taskIOUtils.loadAll();
+        taskList = new TaskList(allTasksList);
+        for (Task eachTask: allTasksList) {
+            allTasksInfo.append(eachTask.toString());
         }
-        System.out.println(allTasks.toString());
+        System.out.println(allTasksInfo.toString());
         mainMenu();
     }
 
@@ -70,7 +74,7 @@ public class Menu {
         String temp = scanner.nextLine();
         System.out.println("Enter task name:");
         String name = scanner.nextLine();
-        System.out.println(taskSet.findLastByName(name).toString());
+        System.out.println(taskList.findLastByName(name).toString());
         mainMenu();
     }
 
@@ -81,7 +85,7 @@ public class Menu {
         System.out.println("Enter task description:");
         String desc = scanner.nextLine();
         Task newTask = new Task(name, desc);
-        taskSet.add(newTask);
+        taskList.add(newTask);
         taskIOUtils.save(newTask);
         System.out.println("Done!");
         mainMenu();
@@ -94,10 +98,10 @@ public class Menu {
         System.out.println("Enter task status:");
         String status = scanner.nextLine();
 
-        Task task = taskSet.findLastByName(name);
+        Task task = taskList.findLastByName(name);
         task.setStatus(status);
         task.updateCode();
-        taskSet.add(task);
+        taskList.add(task);
         taskIOUtils.save(task);
 
         System.out.println("Done!");
@@ -112,10 +116,10 @@ public class Menu {
         System.out.println("Enter task status:");
         String executor = scanner.nextLine();
 
-        Task task = taskSet.findLastByName(name);
+        Task task = taskList.findLastByName(name);
         task.setExecutor(executor);
         task.updateCode();
-        taskSet.add(task);
+        taskList.add(task);
         taskIOUtils.save(task);
 
         System.out.println("Done!");
@@ -128,12 +132,12 @@ public class Menu {
         System.out.println("Enter task name:");
         String name = scanner.nextLine();
 
-        Task task = taskSet.findLastByName(name);
-        taskSet.delete(task);
+        Task task = taskList.findLastByName(name);
+        taskList.delete(task);
         taskIOUtils.delete(task);
 
         System.out.println("Done!");
-        System.out.println("Current task version is " + taskSet.findLastByName(name).getCode());
+        System.out.println("Current task version is " + taskList.findLastByName(name).getCode());
         mainMenu();
     }
 
@@ -145,7 +149,7 @@ public class Menu {
         System.out.println("Enter task name:");
         String name = scanner.nextLine();
 
-        taskSet.deleteByName(name);
+        taskList.deleteByName(name);
         taskIOUtils.deleteAllByName(name);
 
         System.out.println("Done!");

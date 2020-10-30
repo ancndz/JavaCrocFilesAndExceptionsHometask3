@@ -1,32 +1,29 @@
-package ru.ancndz.environment;
+package ru.ancndz.environment.IOUtilsTests;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.ancndz.environment.IOUtils;
 import ru.ancndz.objects.Task;
-import ru.ancndz.objects.TaskSet;
+import ru.ancndz.objects.TaskList;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class IOUtilsDeleteTest {
 
     private final String pathToFiles = "src/Main/resources/temp/";
 
     IOUtils<Task> taskIOUtils = new IOUtils<>();
-    TaskSet taskSet = new TaskSet(new HashSet<>());
+    TaskList taskList = new TaskList(new LinkedList<>());
 
     @BeforeEach
     void initTasks() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 5; j++) {
-                taskSet.add(new Task(j, "Name" + i, "some desc"));
+                taskList.add(new Task(j, "Name" + i, "some desc"));
             }
         }
     }
@@ -53,14 +50,14 @@ class IOUtilsDeleteTest {
 
     @Test
     void deleteItemByNameAndCode() {
-        taskIOUtils.saveAll(taskSet.getTaskSet());
+        taskIOUtils.saveAll(taskList.getTaskList());
         taskIOUtils.deleteItemByNameAndCode("Name2", 1);
         Assertions.assertFalse(new File(pathToFiles + "Name2/1").exists());
     }
 
     @Test
     void deleteAllByName() {
-        taskIOUtils.saveAll(taskSet.getTaskSet());
+        taskIOUtils.saveAll(taskList.getTaskList());
         taskIOUtils.deleteAllByName("Name1");
         Assertions.assertFalse(new File(pathToFiles + "Name1").exists());
     }

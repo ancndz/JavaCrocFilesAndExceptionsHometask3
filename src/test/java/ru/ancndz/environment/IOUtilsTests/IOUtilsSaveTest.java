@@ -1,12 +1,13 @@
-package ru.ancndz.environment;
+package ru.ancndz.environment.IOUtilsTests;
 
 import org.junit.jupiter.api.*;
+import ru.ancndz.environment.IOUtils;
 import ru.ancndz.objects.Task;
-import ru.ancndz.objects.TaskSet;
+import ru.ancndz.objects.TaskList;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.LinkedList;
 
 
 class IOUtilsSaveTest {
@@ -14,13 +15,13 @@ class IOUtilsSaveTest {
     private final String pathToFiles = "src/Main/resources/temp/";
 
     IOUtils<Task> taskIOUtils = new IOUtils<>();
-    TaskSet taskSet = new TaskSet(new HashSet<>());
+    TaskList taskList = new TaskList(new LinkedList<>());
 
     @BeforeEach
     void initTasks() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 5; j++) {
-                taskSet.add(new Task(j, "Name" + i, "some desc"));
+                taskList.add(new Task(j, "Name" + i, "some desc"));
             }
         }
     }
@@ -47,14 +48,14 @@ class IOUtilsSaveTest {
 
     @Test
     void save() {
-        taskIOUtils.save(taskSet.findByNameAndCode("Name2", 2).get(0));
+        taskIOUtils.save(taskList.findByNameAndCode("Name2", 2).get(0));
         Assertions.assertTrue(new File(pathToFiles + "Name2/2").exists());
     }
 
     @Test
     void saveAll() {
-        taskIOUtils.saveAll(taskSet.getTaskSet());
-        for (Task eachTask: this.taskSet.getTaskSet()) {
+        taskIOUtils.saveAll(taskList.getTaskList());
+        for (Task eachTask: this.taskList.getTaskList()) {
             Assertions.assertTrue(new File(pathToFiles + eachTask.getName() + "/" + eachTask.getCode()).exists());
         }
     }
