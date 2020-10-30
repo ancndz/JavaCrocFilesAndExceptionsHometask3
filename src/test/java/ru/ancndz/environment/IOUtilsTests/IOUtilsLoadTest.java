@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 class IOUtilsLoadTest {
 
@@ -61,7 +60,7 @@ class IOUtilsLoadTest {
     @Test
     void loadAllByName() {
         List<Task> allTasks = taskIOUtils.loadAllByName("Name1");
-        Assertions.assertEquals(this.taskList.getTaskList().stream().filter(task -> task.getName().equals("Name1")).collect(Collectors.toList()), allTasks);
+        Assertions.assertEquals(this.taskList.findAllByName("Name1"), allTasks);
     }
 
     @Test

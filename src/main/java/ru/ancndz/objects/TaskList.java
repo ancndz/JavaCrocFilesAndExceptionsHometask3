@@ -20,7 +20,13 @@ public class TaskList {
 
     public Task findLastByName(String name) {
         List<Task> taskList = findAllByName(name);
-        return taskList.stream().max(Comparator.comparing(Task::getCode)).orElse(taskList.get(0));
+        Task maxVerCodeTask = taskList.get(0);
+        for (Task eachTask: taskList) {
+            if (eachTask.getCode() > maxVerCodeTask.getCode()) {
+                maxVerCodeTask = eachTask;
+            }
+        }
+        return maxVerCodeTask;
     }
 
     public boolean deleteByNameAndCode(String name, long code) {
@@ -28,16 +34,31 @@ public class TaskList {
     }
 
     public List<Task> findAllByName(String name) {
-        return taskList.stream().filter(task -> task.getName().equals(name)).collect(Collectors.toList());
+        List<Task> taskListWithName = new LinkedList<>();
+        for (Task eachTask : taskList) {
+            if (eachTask.getName().equals(name)) {
+                taskListWithName.add(eachTask);
+            }
+        }
+        return taskListWithName;
     }
 
     public List<Task> findByNameAndCode(String name, long code) {
-        return taskList.stream().filter(task -> task.getName().equals(name) && task.getCode() == code).collect(Collectors.toList());
+        List<Task> taskListWithNameAndCode = new LinkedList<>();
+        for (Task eachTask : taskList) {
+            if (eachTask.getName().equals(name) && eachTask.getCode() == code) {
+                taskListWithNameAndCode.add(eachTask);
+            }
+        }
+        return taskListWithNameAndCode;
     }
 
     public List<Task> getAllLastTasks() {
         Set<String> allNames = new HashSet<>();
-        taskList.forEach(task -> allNames.add(task.getName()));
+        for (Task eachTask: taskList) {
+            allNames.add(eachTask.getName());
+        }
+        //taskList.forEach(task -> allNames.add(task.getName()));
         List<Task> allLasts = new LinkedList<>();
         for (String name: allNames) {
             allLasts.add(findLastByName(name));
